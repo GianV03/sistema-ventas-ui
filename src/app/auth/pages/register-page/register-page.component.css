@@ -1,0 +1,13 @@
+div{
+    width: 600px;
+}
+
+form{
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+.form-field{
+    width:100%;
+}

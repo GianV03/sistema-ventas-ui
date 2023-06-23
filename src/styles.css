@@ -1,1 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+table {
+    width: 100%;
+  }
+
+  th{
+    background-color: #3F51B5 !important;
+    color:white !important;
+  }
+
+  .mat-elevation-z8{
+    min-width: 600px;
+  }
+
+  table{
+    overflow: scroll;
+  }

@@ -1,0 +1,47 @@
+<div class="main-container">
+  <div class="sales-main-toolbar">
+    <input type="text" />
+    <button mat-raised-button color="warn">
+      <mat-icon>search</mat-icon>
+      Buscar
+    </button>
+    <button mat-raised-button color="warn">
+      <mat-icon>barcode_reader</mat-icon>
+      Escanear
+    </button>
+  </div>
+
+  <div class="shopping-cart-sidebar">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Shopping Cart</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul class="mt-5">
+          <li class="list-item">
+            <span>
+              <mat-icon matListItemIcon>paid</mat-icon>
+              Subtotal:
+            </span>
+            <span>{{ 1000 | currency }}</span>
+          </li>
+          <li class="list-item">
+            <span>
+              <mat-icon matListItemIcon>savings</mat-icon>
+              Descuento:
+            </span>
+          </li>
+          <li class="list-item">
+            <span>
+              <mat-icon matListItemIcon>paid</mat-icon>
+              Total a pagar:
+            </span>
+          </li>
+        </ul>
+      </mat-card-content>
+      <mat-card-actions>
+        <button class="pay-button" mat-raised-button color="warn" (click)="openPaymentDetail()">Pagar</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

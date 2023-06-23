@@ -1,0 +1,58 @@
+.main-container{
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.sales-main-toolbar{
+    margin-top:1rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    flex: 2 1;
+    min-width: 450px;
+    border-radius: 5px;
+}
+
+
+
+button, input{
+    margin: 1rem 0rem 1rem 1rem;
+    height: 2rem;
+}
+
+input{
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    padding-left: .3rem;
+}
+
+.shopping-cart-sidebar{
+    margin:1rem 0 0 .3rem;
+    flex:1 1;
+    height:100px;
+}
+
+.list-item{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+}
+
+.list-item span{
+    display: flex;
+    align-items: center;
+    height:3rem;
+}
+
+.list-item mat-icon{
+    margin-right: .2rem;
+}
+
+.pay-button{
+    width: 100%;
+}

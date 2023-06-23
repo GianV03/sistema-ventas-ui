@@ -1,0 +1,41 @@
+<div class="main-container">
+  <mat-card>
+    <mat-card-header>
+      <h1>{{ 1000.0 | currency }}</h1>
+    </mat-card-header>
+    <mat-card-content class="flex mt-3">
+        <div class="content-section">
+            <form [formGroup]="form">
+                <mat-form-field>
+                    <mat-label>Efectivo</mat-label>
+                    <input type="text" matInput [(ngModel)]="efectivo" formControlName="efectivo">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Tarjeta</mat-label>
+                    <input type="text" matInput formControlName="card">
+                </mat-form-field>
+            </form>
+            <h2>Cambio:  {{ calcularCambio() | currency }} </h2>
+        </div>
+        <div class="content-section">
+            <mat-select value="imprimir" class="select">
+                <mat-option value="imprimir">Imprimir</mat-option>
+                <mat-option value="Cannon 3600">Cannon 3600</mat-option>
+                <mat-option value="otra Impresora">otra impresora</mat-option>
+            </mat-select>
+            <mat-select value="Documento" class="select mt-5">
+                <mat-option value="Documento">Documento</mat-option>
+                <mat-option value="Boleta">Boleta</mat-option>
+                <mat-option value="Factura">Factura</mat-option>
+            </mat-select>
+            <mat-form-field class="select mt-3">
+                <mat-label>Cliente</mat-label>
+                <input type="text" matInput>
+            </mat-form-field>
+        </div>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-raised-button color="warn">Imprimir</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

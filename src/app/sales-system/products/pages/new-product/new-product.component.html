@@ -1,0 +1,50 @@
+<div class="col-12 md:col-6 lg:col-6 justify-content-center">
+        <h1 *ngIf="id; else create">Editar Producto</h1>
+        <ng-template #create><h1 *ngIf="!id">Crear Producto</h1></ng-template>
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title *ngIf="!id || id==''">nuevo producto</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <hr>
+                <form [formGroup]="productForm">
+                    <mat-form-field class="form-field">
+                        <mat-label>Nombre</mat-label>
+                        <input type="text" matInput formControlName="name">
+                    </mat-form-field>
+                    <mat-form-field class="form-field">
+                        <mat-label>Tipo</mat-label>
+                        <mat-select formControlName="type">
+                            <mat-option value="bebida gaseosa">Bebida Gaseosa</mat-option>
+                            <mat-option value="galleta">Galleta</mat-option>
+                            <mat-option value="agua">Agua</mat-option>
+                            <mat-option value="chocolate">Chocolate</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field class="form-field">
+                        <mat-label>Precio Compra</mat-label>
+                        <input type="number" matInput formControlName="purchasePrice">
+                    </mat-form-field>
+                    <mat-form-field class="form-field">
+                        <mat-label>Precio Venta</mat-label>
+                        <input type="number" matInput formControlName="salePrice">
+                    </mat-form-field>
+                    <mat-form-field class="form-field">
+                        <mat-label>Proveedor</mat-label>
+                        <mat-select formControlName="supplier">
+                            <mat-option>Backus</mat-option>
+                            <mat-option>Soda</mat-option>
+                            <mat-option>Pepsico</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field class="form-field">
+                        <mat-label>Detalles</mat-label>
+                        <textarea  matInput formControlName="details"></textarea>
+                    </mat-form-field>
+                    <button mat-raised-button color="primary" routerLink="/">Atrás</button>
+                    <button mat-raised-button color="primary" class="ml-2">Guardar</button>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
