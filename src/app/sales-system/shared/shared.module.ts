@@ -4,7 +4,6 @@ import { MainTableComponent } from './components/main-table/main-table.component
 import { MaterialModule } from 'src/app/material/material.module';
 
 
-
 @NgModule({
   declarations: [
     MainTableComponent

@@ -1,7 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Inventory } from 'src/app/sales-system/shared/interfaces/inventory.interface';
+import { InventoryService } from 'src/app/sales-system/shared/services/inventory.service';
 
 export interface productData {
   id: string;
@@ -17,36 +19,31 @@ export interface productData {
   templateUrl: './inventory-main.component.html',
   styleUrls: ['./inventory-main.component.css']
 })
-export class InventoryMainComponent {
-  displayedColumns: string[] = ['id', 'name', 'type', 'stock', 'state', 'actions'];
-  dataSource: MatTableDataSource<productData>;
+export class InventoryMainComponent implements OnInit {
+  displayedColumns: string[] = ['id', 'product', 'type', 'stock', 'state', 'actions'];
+  dataSource!: MatTableDataSource<Inventory>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator | null;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor() {
-    let product1 ={
-      id: '1',
-      name: 'CocaCola',
-      type: 'bebida gaseosa',
-      stock: 240,
-      state: 'disponible'
-    }
-
-    let product2 ={
-      id: '2',
-      name: 'Sublime',
-      type: 'Chocolate',
-      stock: 400,
-      state: 'disponible'
-    }
-    this.dataSource = new MatTableDataSource([product1, product2]);
+  constructor(
+    private inventoryService: InventoryService
+  ) {
+  }
+  ngOnInit(): void {
+    this.initValues();
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
+
+  initValues(){
+    this.findAllInventory();
+  }
+
+
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -56,4 +53,15 @@ export class InventoryMainComponent {
       this.dataSource.paginator.firstPage();
     }
   }
+
+  findAllInventory(){
+    this.inventoryService.findAllInventory()
+    .subscribe(
+      response=>{
+        this.dataSource = new MatTableDataSource(response.content);
+        console.log(response);
+      }
+    )
+  }
+
 }

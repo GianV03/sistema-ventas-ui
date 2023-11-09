@@ -1,0 +1,48 @@
+<div class="col-12 md:col-6 lg:col-6 justify-content-center">
+    <h1 *ngIf="id; else create">Editar Proveedor</h1>
+    <ng-template #create>
+        <h1 *ngIf="!id">Crear Proveedor</h1>
+    </ng-template>
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title *ngIf="!id || id==''">Nuevo Proveedor</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <hr>
+            <form [formGroup]="supplierForm">
+                <mat-form-field class="form-field">
+                    <mat-label>Nombre</mat-label>
+                    <input type="text" matInput formControlName="name">
+                </mat-form-field>
+
+                <mat-form-field class="form-field">
+                    <mat-label>Tipo de documento</mat-label>
+                    <mat-select matInput formControlName="documentType">
+                        <mat-option value="">
+                            Tipo Documento
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="form-field">
+                    <mat-label>Nro. Documento</mat-label>
+                    <input type="text" matInput formControlName="document">
+                </mat-form-field>
+
+                <mat-form-field class="form-field">
+                    <mat-label>Dirección</mat-label>
+                    <input type="text" matInput formControlName="address">
+                </mat-form-field>
+
+                <mat-form-field class="form-field">
+                    <mat-label>Detalles</mat-label>
+                    <input type="text" matInput formControlName="details">
+                </mat-form-field>
+
+                <button mat-raised-button color="primary" routerLink="/proveedores">Atrás</button>
+                <button mat-raised-button color="primary" class="ml-2" (click)="onConfirm()">Guardar</button>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>
+

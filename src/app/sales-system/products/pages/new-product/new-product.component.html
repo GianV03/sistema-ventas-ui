@@ -14,11 +14,9 @@
                     </mat-form-field>
                     <mat-form-field class="form-field">
                         <mat-label>Tipo</mat-label>
-                        <mat-select formControlName="type">
-                            <mat-option value="bebida gaseosa">Bebida Gaseosa</mat-option>
-                            <mat-option value="galleta">Galleta</mat-option>
-                            <mat-option value="agua">Agua</mat-option>
-                            <mat-option value="chocolate">Chocolate</mat-option>
+                        <mat-select formControlName="typeId" [(value)]="selectedType">
+                            <mat-option value="">Tipo</mat-option>
+                            <mat-option *ngFor="let type of productTypes" [value]="type.id">{{ type.productTypeName  }}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field class="form-field">
@@ -31,10 +29,9 @@
                     </mat-form-field>
                     <mat-form-field class="form-field">
                         <mat-label>Proveedor</mat-label>
-                        <mat-select formControlName="supplier">
-                            <mat-option>Backus</mat-option>
-                            <mat-option>Soda</mat-option>
-                            <mat-option>Pepsico</mat-option>
+                        <mat-select formControlName="supplierId" [(value)]="selectedSupplier">
+                            <mat-option value="">Proveedor</mat-option>
+                            <mat-option *ngFor="let supplier of suppliers" [value]="supplier.id">{{ supplier.name }}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field class="form-field">
@@ -42,7 +39,7 @@
                         <textarea  matInput formControlName="details"></textarea>
                     </mat-form-field>
                     <button mat-raised-button color="primary" routerLink="/">Atrás</button>
-                    <button mat-raised-button color="primary" class="ml-2">Guardar</button>
+                    <button mat-raised-button color="primary" class="ml-2" (click)="onConfirm()">Guardar</button>
                 </form>
             </mat-card-content>
         </mat-card>

@@ -1,0 +1,23 @@
+{
+  "/products": {
+    "target": "http://localhost:9000",
+    "secure": false
+
+  },
+  "/product-types": {
+    "target": "http://localhost:9000",
+    "secure": false
+
+  },
+  "/suppliers": {
+    "target": "http://localhost:9000",
+    "secure": false
+
+  },
+  "/inventory": {
+    "target": "http://localhost:9000",
+    "secure": false
+
+  }
+  }
+  
