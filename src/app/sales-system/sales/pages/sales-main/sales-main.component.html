@@ -1,7 +1,8 @@
 <div class="main-container">
   <div class="sales-main-toolbar">
-    <input type="text" />
-    <button mat-raised-button color="warn">
+    <div class="search-container">
+          <input type="text" #input />
+    <button mat-raised-button (click)="onSearch(input.value)" color="warn">
       <mat-icon>search</mat-icon>
       Buscar
     </button>
@@ -9,6 +10,40 @@
       <mat-icon>barcode_reader</mat-icon>
       Escanear
     </button>
+    </div>
+    <div class="products-table-container">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <ng-container matColumnDef="nro">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header fxFlex="200px">Nro.</th>
+            <td mat-cell *matCellDef="let element; let i = index" fxFlex="200px">{{i+1}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="product">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header fxFlex="200px">Producto</th>
+            <td mat-cell *matCellDef="let row" fxFlex="200px"> {{ row.name }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header fxFlex="200px">Descripción</th>
+            <td mat-cell *matCellDef="let row" fxFlex="200px"> {{ row.description }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header fxFlex="200px">Precio</th>
+            <td mat-cell *matCellDef="let row" fxFlex="200px"> {{ row.salePrice }} </td>
+          </ng-container>
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header fxFlex="200px">Seleccionar</th>
+            <td mat-cell *matCellDef="let row" fxFlex="200px"> 
+              <mat-checkbox (change)="toggleSelection(row)" [checked]="isSelected(row)"></mat-checkbox> 
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        </table>
+    </div>
   </div>
 
   <div class="shopping-cart-sidebar">
@@ -23,19 +58,23 @@
               <mat-icon matListItemIcon>paid</mat-icon>
               Subtotal:
             </span>
-            <span>{{ 1000 | currency }}</span>
+            <span>{{ subtotal | currency }}</span>
           </li>
           <li class="list-item">
             <span>
               <mat-icon matListItemIcon>savings</mat-icon>
               Descuento:
             </span>
+            <span>
+              {{ discount | currency }}
+            </span>
           </li>
           <li class="list-item">
             <span>
               <mat-icon matListItemIcon>paid</mat-icon>
-              Total a pagar:
+              Total a pagar: 
             </span>
+            <span>{{ total | currency }} </span>
           </li>
         </ul>
       </mat-card-content>

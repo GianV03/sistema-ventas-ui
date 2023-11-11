@@ -20,7 +20,7 @@ export interface productData {
   styleUrls: ['./inventory-main.component.css']
 })
 export class InventoryMainComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'product', 'type', 'stock', 'state', 'actions'];
+  displayedColumns: string[] = ['id', 'product', 'supplier', 'stock', 'state', 'actions'];
   dataSource!: MatTableDataSource<Inventory>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator | null;

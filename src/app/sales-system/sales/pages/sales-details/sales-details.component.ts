@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgModel, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-sales-details',
@@ -10,15 +11,18 @@ export class SalesDetailsComponent implements OnInit{
 
   efectivo!: number;
   form!: FormGroup;
-
+  total: number = 0;
 
   constructor(
     private formBuilder: FormBuilder,
+    public dialogRef : MatDialogRef<number>,
+    @Inject(MAT_DIALOG_DATA) public data : any
   ){
 
   }
   ngOnInit(): void {
      this.form = this.initForm();
+     this.initValues();
   }
 
   initForm(): FormGroup{
@@ -28,9 +32,12 @@ export class SalesDetailsComponent implements OnInit{
     })
   }
 
+  initValues(){
+    this.total = this.data.total;
+  }
   
   calcularCambio() {
-    return 1000 - Number(this.efectivo);
+    return Number(this.efectivo) - this.total;
   }
 
 }

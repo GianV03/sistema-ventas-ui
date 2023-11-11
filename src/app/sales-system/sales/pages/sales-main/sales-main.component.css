@@ -10,10 +10,22 @@
     align-items: center;
     align-content: center;
     flex: 2 1;
+    flex-flow: column nowrap;
     min-width: 450px;
     border-radius: 5px;
 }
 
+.search-container{
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+}
+
+
+.products-table-container{
+    margin-top: 3rem;
+    width: 100%;
+}
 
 
 button, input{
