@@ -2,7 +2,7 @@
     <mat-label>Filtro</mat-label>
     <input matInput (keyup)="applyFilter($event)" placeholder="Producto" #input>
   </mat-form-field>
-     <button mat-raised-button color="warn" class="ml-3" routerLink="/productos/nuevo">Generar Pedido</button>
+     <button class="ml-3" mat-raised-button color="warn"  routerLink="/pedidos/nuevo">Generar Pedido</button>
   
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
@@ -13,55 +13,43 @@
         <td mat-cell *matCellDef="let element; let i = index" fxFlex="200px"> {{i+1}} </td>
       </ng-container>
   
-      <!-- Name Column -->
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header  fxFlex="200px"> Nombre Producto </th>
-        <td mat-cell *matCellDef="let row" fxFlex="200px" fxLayoutAlign="center center" > {{row.name}} </td>
-      </ng-container>
-  
       <!-- Type Column -->
       <ng-container matColumnDef="date">
         <th mat-header-cell *matHeaderCellDef mat-sort-header fxFlex="200px"> Fecha </th>
-        <td mat-cell *matCellDef="let row" fxFlex="200px" fxLayoutAlign="center center"> {{row.typeName}} </td>
+        <td mat-cell *matCellDef="let row" fxFlex="200px" fxLayoutAlign="center center"> {{ row.orderDate | date }} </td>
       </ng-container>
   
-      <!-- Price Column -->
+      <!-- Supplier Column -->
       <ng-container matColumnDef="supplier">
         <th mat-header-cell *matHeaderCellDef mat-sort-header fxFlex="200px"> Proveedor </th>
-        <td mat-cell *matCellDef="let row" fxFlex="200px"  fxFlexAlign="center center"> {{row.salePrice | currency}} </td>
+        <td mat-cell *matCellDef="let row" fxFlex="200px"  fxFlexAlign="center center"> {{ row.supplierName }} </td>
       </ng-container>
 
-        <!-- Price Column -->
-        <ng-container matColumnDef="product">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header fxFlex="200px"> Product </th>
-            <td mat-cell *matCellDef="let row" fxFlex="200px"  fxFlexAlign="center center"> {{row.salePrice | currency}} </td>
-        </ng-container>
+      <!-- State Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header fxFlex="200px"> Estado </th>
+        <td mat-cell *matCellDef="let row" fxFlex="200px"  fxFlexAlign="center center"> {{ row.state }} </td>
+      </ng-container>
 
-        <!-- Price Column -->
+        <!-- Subtotal Column -->
         <ng-container matColumnDef="subtotal">
             <th mat-header-cell *matHeaderCellDef mat-sort-header fxFlex="200px"> Subtotal </th>
-            <td mat-cell *matCellDef="let row" fxFlex="200px"  fxFlexAlign="center center"> {{row.salePrice | currency}} </td>
+            <td mat-cell *matCellDef="let row" fxFlex="200px"  fxFlexAlign="center center"> {{row.subTotal | currency}} </td>
         </ng-container>
 
-        <!-- Price Column -->
+        <!-- Total Column -->
         <ng-container matColumnDef="total">
             <th mat-header-cell *matHeaderCellDef mat-sort-header fxFlex="200px"> total </th>
-            <td mat-cell *matCellDef="let row" fxFlex="200px"  fxFlexAlign="center center"> {{row.salePrice | currency}} </td>
-        </ng-container>
-
-        <!-- Price Column -->
-        <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header fxFlex="200px"> Estado </th>
-            <td mat-cell *matCellDef="let row" fxFlex="200px"  fxFlexAlign="center center"> {{row.salePrice | currency}} </td>
+            <td mat-cell *matCellDef="let row" fxFlex="200px"  fxFlexAlign="center center"> {{row.total | currency}} </td>
         </ng-container>
 
       <!-- Actions Column -->
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef mat-sort-header fxFlex="200px"> Acciones </th>
         <td mat-cell *matCellDef="let element" fxFlex="200px" fxFlexAlign="center center">
-          <span (click)="viewProduct(element.id)"> <mat-icon>visibility</mat-icon> </span> 
-          <span (click)="editProduct(element.id)"> <mat-icon>edit</mat-icon> </span> 
-          <span (click)="viewProduct(element.id)"> <mat-icon>delete</mat-icon> </span> 
+          <span (click)="viewOrder(element.id)"> <mat-icon>visibility</mat-icon> </span> 
+          <span (click)="editOrder(element.id)"> <mat-icon>edit</mat-icon> </span> 
+          <span (click)="viewOrder(element.id)"> <mat-icon>delete</mat-icon> </span> 
         </td>
       </ng-container>
   
@@ -75,9 +63,7 @@
     </table>
   
     <mat-paginator 
-    (page)="findProducts($event)"
+    (page)="findAllOrders()"
     [length]="totalLength" [pageSizeOptions]="[5, 10, 25, 100]" [pageIndex]="pageIndex" [pageSize]="pageSize"  
     [showFirstLastButtons]="true" aria-label="Select page of users"></mat-paginator>
   </div>
-
-  

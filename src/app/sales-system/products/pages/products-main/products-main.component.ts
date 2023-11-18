@@ -71,7 +71,7 @@ export class ProductsMainComponent implements AfterViewInit, OnInit {
   }
 
   editProduct(productId: string){
-    this.router.navigate(['/productos/nuevo', {id: productId, mode: 'edit'}]);
+    this.router.navigate(['/productos/editar', {id: productId, mode: 'edit'}]);
   }
 }
 

@@ -1,0 +1,106 @@
+<div class="col-12 md:col-6 lg:col-6 justify-content-center">
+
+    <form [formGroup]="orderForm">
+
+    <h1>Editar Pedido</h1>
+
+    <ng-template #create><h1>Crear Pedido</h1></ng-template>
+
+    <mat-card>
+
+        <mat-card-header>
+            <mat-card-title>nuevo pedido</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+
+            <hr>
+                <mat-form-field class="form-field">
+                    <mat-label>Fecha Pedido</mat-label>
+                    <input type="date" matInput formControlName="orderDate">
+                </mat-form-field>
+
+                <mat-form-field class="form-field">
+                    <mat-label>Fecha de entrega</mat-label>
+                    <input type="date" matInput formControlName="deliveryDate">
+                </mat-form-field>
+
+                <mat-form-field class="form-field">
+                    <mat-label>Fecha real de entrega</mat-label>
+                    <input type="date" matInput formControlName="realDeliveryDate">
+                </mat-form-field>
+
+                <mat-form-field class="form-field">
+                    <mat-label>Proveedor</mat-label>
+                    <mat-select formControlName="supplier">
+                        <mat-option value="">Tipo</mat-option>
+                        <mat-option></mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="form-field">
+                    <mat-label>Estado</mat-label>
+                    <input type="number" matInput formControlName="state">
+                </mat-form-field>
+
+                <mat-form-field class="form-field">
+                    <mat-label>Subtotal</mat-label>
+                    <input type="number" matInput formControlName="subtotal">
+                </mat-form-field>
+
+                <mat-form-field class="form-field">
+                    <mat-label>Total</mat-label>
+                    <input matInput type="text" formControlName="total">
+                </mat-form-field>
+                <!--button mat-raised-button color="primary" routerLink="/">Atrás</button>
+                <button mat-raised-button color="primary" class="ml-2" >Guardar</button-->
+
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card style="margin-top:1rem;">
+
+        <mat-card-header>
+            Detalles
+        </mat-card-header>
+
+        <mat-card-content>
+            <hr>
+            <div formArrayName="orderDetails">
+                <div *ngFor="let orderDetail of orderDetailsFormArray.controls; let i = index">
+
+                    <div [formGroup]="getFormGroup(i)">
+                        <mat-form-field>
+                            <mat-label>Producto</mat-label>
+                            <input type="text" matInput formControlName="product">
+                        </mat-form-field>
+    
+                        <mat-form-field>
+                            <mat-label>Precio</mat-label>
+                            <input type="number" matInput formControlName="price">
+                        </mat-form-field>
+    
+                        <mat-form-field>
+                            <mat-label>Cantidad</mat-label>
+                            <input type="text" matInput formControlName="quantity">
+                        </mat-form-field>
+    
+                        <mat-form-field>
+                            <mat-label>Total</mat-label>
+                            <input type="text" matInput formControlName="total">
+                        </mat-form-field>
+    
+                        <button mat-raised-button (click)="removeDetail(i)" color="warn">Quitar</button>
+                    </div>
+
+                </div>
+
+            </div>
+            <button mat-raised-button (click)="addDetail()" color="primary">Añadir Detalle</button>
+        </mat-card-content>
+
+    </mat-card>
+
+    </form>
+
+</div>
+
