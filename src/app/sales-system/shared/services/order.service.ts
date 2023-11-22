@@ -21,4 +21,11 @@ export class OrderService{
         )
     }
 
+    public findOrderById(id: string): Observable<any>{
+        return this.httpClient.get<any>(`${this.SERVER}/id/${id}`)
+        .pipe(
+            catchError(e => of())
+        )
+    }
+
 }
