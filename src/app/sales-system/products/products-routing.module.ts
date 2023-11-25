@@ -11,6 +11,10 @@ const routes: Routes =[
     {
         path: 'nuevo',
         component: NewProductComponent
+    },
+    {
+        path: 'editar',
+        component: NewProductComponent
     }
 ]
 
