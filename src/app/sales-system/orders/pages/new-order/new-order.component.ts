@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { format } from 'date-fns';
+import { timeout } from 'rxjs';
 import { ProductPage, ProductPageContent } from 'src/app/sales-system/shared/interfaces/product-page.interface';
 import { productData } from 'src/app/sales-system/shared/interfaces/product.interface';
 import { Supplier } from 'src/app/sales-system/shared/interfaces/supplier.interface';
@@ -24,7 +25,8 @@ export class NewOrderComponent implements OnInit{
   modeView: boolean = false;
   order: any;
   orderForm!: FormGroup;
-  products!: ProductPageContent[]
+  products!: ProductPageContent[];
+  selectedProduct!: string;
   suppliers!: Supplier[]
 
   constructor(
@@ -45,6 +47,7 @@ export class NewOrderComponent implements OnInit{
     
     this.initForm();
     this.initValues();
+
   }
 
   initValues(){
@@ -74,8 +77,8 @@ export class NewOrderComponent implements OnInit{
   initForm(){
     this.orderForm = new FormGroup({
         orderDate: new FormControl(''),
-        deliveryDate: new FormControl(''),
-        realDeliveryDate : new FormControl(''),
+        orderDeliveryDate: new FormControl(''),
+        orderRealDeliveryDate : new FormControl(''),
         supplier: new FormControl(''),
         state: new FormControl(),
         subtotal: new FormControl({value: 0,disabled: true}),
@@ -89,15 +92,28 @@ export class NewOrderComponent implements OnInit{
     return this.orderForm.get('orderDetails') as FormArray;
   }
 
+
+  calculateDetailTotal(elemento: FormGroup){
+    const quantity = elemento.get('quantity')?.value;
+    const price = elemento.get('price')?.value;
+    const total = quantity * price;
+    elemento.get('total')?.setValue(total);
+  }
+
   addDetail(product: string, price: number, quantity: number, total: number){
-    const newDetail = this.formBuilder.group({
+
+    let newDetail = this.formBuilder.group({
       product: [product],
-      price: [price],
+      price: [{value:price, disabled: true}],
       quantity: [quantity],
-      total:[total]
+      total:[{value:total, disabled: true}]
     });
 
     this.orderDetailsFormArray.push(newDetail);
+
+    console.log(newDetail)
+    this.calculateDetailTotal(newDetail);
+
   }
 
   removeDetail(index: number){
@@ -136,11 +152,39 @@ export class NewOrderComponent implements OnInit{
     this.productService.findAllProducts()
     .subscribe(
       response=>{
+        console.log(response.content)
         this.products = response.content;
       }
     )
   }
 
+  onSelectProduct(element: FormGroup){
+    const productId = this.selectedProduct;
+    const product = this.products.find(product => product.id == productId);
+    element.get('price')?.setValue(product?.purchasePrice);
+  }
+
+  saveOrder(){
+    if(this.id!==''){
+
+    }else{
+
+      const objectToSave ={
+        orderDate : this.getOrderDate().value,
+        orderDeliveryDate: this.getOrderDeliveryDate().value,
+        orderRealDeliveryDate: this.getOrderRealDeliveryDate().value,
+        supplier: this.getSupplier().value,
+        state: this.getState().value
+      }
+
+      this.orderService
+      .createOrder(objectToSave)
+      .subscribe(response=>{
+        console.log(response)
+      })
+
+    }
+  }
 
 
   /** Getters for the Form Controls **/
@@ -149,12 +193,12 @@ export class NewOrderComponent implements OnInit{
     return this.orderForm.get('orderDate')!;
   }
 
-  getDeliveryDate(){
-    return this.orderForm.get('deliveryDate')!;
+  getOrderDeliveryDate(){
+    return this.orderForm.get('orderDeliveryDate')!;
   }
 
-  getRealDeliveryDate(){
-    return this.orderForm.get('realDeliveryDate')!;
+  getOrderRealDeliveryDate(){
+    return this.orderForm.get('orderRealDeliveryDate')!;
   }
 
   getSupplier(){

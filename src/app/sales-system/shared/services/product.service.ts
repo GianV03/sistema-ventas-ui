@@ -24,6 +24,16 @@ export class ProductService {
     return this.httpClient.get<ProductPage>(`${this.SERVER}`, {params});
   }
 
+  findProductsByFilter(name: string, type: string, page: number, size: number){
+    
+    let params = new HttpParams;
+    if(name) params = params.append('productName', name);
+    if(type) params = params.append('productType', type);
+    if(page) params = params.append('page', page);
+    if(size) params = params.append('size', size);
+    return this.httpClient.get<ProductPage>(`${this.SERVER}/filters`, {params});
+  }
+
   findProductById(id: string): Observable<productData>{
     return this.httpClient.get<productData>(`${this.SERVER}/${id}`);
   }

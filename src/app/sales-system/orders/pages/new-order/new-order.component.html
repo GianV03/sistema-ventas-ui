@@ -1,4 +1,4 @@
-<div class="col-12 md:col-6 lg:col-6 justify-content-center">
+<div class="col-12 md:col-12 lg:col-12 justify-content-center">
 
     <form [formGroup]="orderForm">
 
@@ -21,12 +21,12 @@
 
                 <mat-form-field class="form-field">
                     <mat-label>Fecha de entrega</mat-label>
-                    <input type="date" matInput formControlName="deliveryDate">
+                    <input type="date" matInput formControlName="orderDeliveryDate">
                 </mat-form-field>
 
                 <mat-form-field class="form-field">
                     <mat-label>Fecha real de entrega</mat-label>
-                    <input type="date" matInput formControlName="realDeliveryDate">
+                    <input type="date" matInput formControlName="orderRealDeliveryDate">
                 </mat-form-field>
 
                 <mat-form-field class="form-field">
@@ -71,7 +71,7 @@
                     <div [formGroup]="getFormGroup(i)">
                         <mat-form-field>
                             <mat-label>Producto</mat-label>
-                            <mat-select formControlName="product">
+                            <mat-select formControlName="product" [(ngModel)]="selectedProduct" (selectionChange)="onSelectProduct(getFormGroup(i))">
                                 <mat-option *ngFor="let product of products" [value]="product.id">{{product.name}}</mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -83,12 +83,12 @@
     
                         <mat-form-field>
                             <mat-label>Cantidad</mat-label>
-                            <input type="text" matInput formControlName="quantity">
+                            <input type="number" matInput formControlName="quantity">
                         </mat-form-field>
     
                         <mat-form-field>
                             <mat-label>Total</mat-label>
-                            <input type="text" matInput formControlName="total">
+                            <input type="number" matInput formControlName="total">
                         </mat-form-field>
     
                         <button mat-raised-button (click)="removeDetail(i)" color="warn">Quitar</button>
@@ -103,6 +103,11 @@
     </mat-card>
 
     </form>
+
+    <div class="col-11 flex justify-content-end mt-2">
+        <button mat-raised-button color="warn" (click)="saveOrder()">Guardar</button>
+        <button mat-raised-button color="warn">Eliminar</button>
+    </div>
 
 </div>
 

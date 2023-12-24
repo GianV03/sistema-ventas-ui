@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Inject, Injectable } from "@angular/core";
 import { Observable, catchError, of } from "rxjs";
 
@@ -6,6 +6,7 @@ import { Observable, catchError, of } from "rxjs";
     providedIn: 'root'
 })
 export class OrderService{
+
 
     private SERVER = 'orders';
 
@@ -26,6 +27,15 @@ export class OrderService{
         .pipe(
             catchError(e => of())
         )
+    }
+
+    public createOrder(order: any): Observable<any>{
+
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+          });
+          
+        return this.httpClient.post(`${this.SERVER}`, order, {headers, responseType:'text'})
     }
 
 }

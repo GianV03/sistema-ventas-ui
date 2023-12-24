@@ -5,6 +5,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ProductService } from 'src/app/sales-system/shared/services/product.service';
 import { ProductPageContent, ProductPage } from 'src/app/sales-system/shared/interfaces/product-page.interface';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ProductTypesService } from 'src/app/sales-system/shared/services/product-types.service';
 
 
 
@@ -14,56 +16,129 @@ import { ProductPageContent, ProductPage } from 'src/app/sales-system/shared/int
   styleUrls: ['./products-main.component.css']
 })
 export class ProductsMainComponent implements AfterViewInit, OnInit {
-  count: number = 0;
-  displayedColumns: string[] = ['nro', 'name', 'typeName', 'price', 'actions'];
-  dataSource!: MatTableDataSource<ProductPageContent>;
-  public pageIndex?: number;
-  public pageSize?: number;
+  public count: number = 0;
+  public displayedColumns: string[] = ['nro', 'name', 'typeName', 'price', 'actions'];
+  public dataSource!: MatTableDataSource<ProductPageContent>;
+  public filtersForm!: FormGroup;
+  public pageIndex: number=0;
+  public pageSize: number=5;
+  public productsTypes!: any;
   public totalLength!: number;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator | null;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
+    private formBuilder: FormBuilder,
     private productService: ProductService,
+    private productTypesService: ProductTypesService,
     private router: Router
   ) {
 
   }
   ngOnInit(): void {
+
     this.initValues();
+
   }
 
   ngAfterViewInit() {
+
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.productService.findAllProducts().subscribe(response=>{console.log(response)});
+
   }
 
+  /** Se inicializan valores */
   initValues(){
-    this.findProducts();
+
+    this.findProductTypes();
+    this.productsInitialSearch();
+    this.initForm();
+
   }
 
-  findProducts(event?: PageEvent){
-    this.productService.findAllProducts(event!)
+  initForm(){
+
+    this.filtersForm = this.formBuilder.group({
+      name: ['', []],
+      type: ['', []]
+    })
+
+  }
+
+  /** Búsqueda inicial de productos */
+  productsInitialSearch(){
+
+    this.productService.findProductsByFilter('', '', 0, 5)
     .subscribe(
       (response: ProductPage)=>{
+        console.log(response)
         this.dataSource = new MatTableDataSource(response.content);
         this.pageIndex = response.number;
         this.pageSize = response.size;
         this.totalLength = response.totalElements;
-
       }
     )
+
   }
 
+  /** Búsqueda de productos por filtros */
+  findProducts(newSearch: boolean){
+
+    // Se valida si se realiza una nueva búsqueda o se cambia de página
+    if(newSearch == true){
+      this.pageIndex = 0
+    }else{
+      this.pageIndex = this.paginator?.pageIndex
+    }
+
+    this.pageSize = this.paginator?.pageSize
+    
+    this.productService.findProductsByFilter(
+      this.getProductNameFilter().toString(), this.getProductTypeFilter().toString(), 
+      this.pageIndex, this.pageSize
+    )
+    .subscribe(
+      response =>{
+        this.dataSource = new MatTableDataSource(response.content);
+        this.pageIndex = response.pageable.pageNumber;
+        this.pageSize = response.pageable.pageSize;
+        this.totalLength = response.totalElements;
+      }
+    )
+
+  }
+
+  getNameFilter(): any {
+
+    throw new Error('Method not implemented.');
+
+  }
+
+  /** Aplicar  */              /** Verificar uso de este método */
   applyFilter(event: Event) {
+
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+
+  }
+
+  findProductTypes(){
+
+    this.productTypesService.findAllProductTypes()
+    .subscribe(
+      response =>{
+        this.productsTypes = response;
+        console.log(response)
+      }
+    )
+
   }
 
   viewProduct(productId: string){
@@ -73,6 +148,15 @@ export class ProductsMainComponent implements AfterViewInit, OnInit {
   editProduct(productId: string){
     this.router.navigate(['/productos/editar', {id: productId, mode: 'edit'}]);
   }
+
+  getProductNameFilter(){
+    return this.filtersForm.get('name')!.value;
+  }
+
+  getProductTypeFilter(){
+    return this.filtersForm.get('type')!.value;
+  }
+
 }
 
 
