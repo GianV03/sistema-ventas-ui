@@ -24,7 +24,7 @@ export class ProductService {
     return this.httpClient.get<ProductPage>(`${this.SERVER}`, {params});
   }
 
-  findProductsByFilter(name: string, type: string, page: number, size: number){
+  findProductsByFilter(name: string, type: string, page: number, size?: number){
     
     let params = new HttpParams;
     if(name) params = params.append('productName', name);
@@ -63,6 +63,10 @@ export class ProductService {
     });
 
     return this.httpClient.put(`${this.SERVER}`, product, {headers, responseType:'text'});
+  }
+
+  deleteProduct(productId: string): Observable<string>{
+    return this.httpClient.delete<string>(`${this.SERVER}/${productId}`, { responseType: 'text' as 'json' });
   }
 
 }

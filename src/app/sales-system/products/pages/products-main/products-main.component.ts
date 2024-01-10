@@ -7,6 +7,7 @@ import { ProductService } from 'src/app/sales-system/shared/services/product.ser
 import { ProductPageContent, ProductPage } from 'src/app/sales-system/shared/interfaces/product-page.interface';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ProductTypesService } from 'src/app/sales-system/shared/services/product-types.service';
+import Swal from 'sweetalert2';
 
 
 
@@ -46,7 +47,6 @@ export class ProductsMainComponent implements AfterViewInit, OnInit {
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.productService.findAllProducts().subscribe(response=>{console.log(response)});
 
   }
 
@@ -102,6 +102,7 @@ export class ProductsMainComponent implements AfterViewInit, OnInit {
     )
     .subscribe(
       response =>{
+        console.log(response)
         this.dataSource = new MatTableDataSource(response.content);
         this.pageIndex = response.pageable.pageNumber;
         this.pageSize = response.pageable.pageSize;
@@ -147,6 +148,31 @@ export class ProductsMainComponent implements AfterViewInit, OnInit {
 
   editProduct(productId: string){
     this.router.navigate(['/productos/editar', {id: productId, mode: 'edit'}]);
+  }
+
+  deleteProduct(productId: string){
+    Swal.fire({
+      title: "¿Está seguro de eliminar el registro?",
+      showDenyButton: true,
+      confirmButtonText: "Eliminar",
+      denyButtonText: `Cancelar`
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        this.productService.deleteProduct(productId)
+        .subscribe(
+          response=>{
+            this.findProducts(false);
+            Swal.fire("Se ha eliminado el registro", "", "success");
+          },
+          error=>{
+            console.log(error)
+            Swal.fire("No se ha podido eliminar el registro", "", "error");
+          }
+        )
+      } else if (result.isDenied) {
+      }
+    });
   }
 
   getProductNameFilter(){

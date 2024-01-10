@@ -1,9 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Inventory } from 'src/app/sales-system/shared/interfaces/inventory.interface';
 import { InventoryService } from 'src/app/sales-system/shared/services/inventory.service';
+import { ProductTypesService } from 'src/app/sales-system/shared/services/product-types.service';
+
 
 export interface productData {
   id: string;
@@ -20,17 +23,26 @@ export interface productData {
   styleUrls: ['./inventory-main.component.css']
 })
 export class InventoryMainComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'product', 'supplier', 'stock', 'state', 'actions'];
-  dataSource!: MatTableDataSource<Inventory>;
+  public displayedColumns: string[] = ['id', 'product', 'supplier', 'stock', 'state', 'actions'];
+  public dataSource!: MatTableDataSource<Inventory>;
+  public filtersForm!: FormGroup;
+  public pageIndex: number=0;
+  public pageSize: number=5;
+  public productTypes!: any;
+  public totalLength!: number;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator | null;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
-    private inventoryService: InventoryService
+    private formBuilder: FormBuilder,
+    private inventoryService: InventoryService,
+    private productTypesService: ProductTypesService
   ) {
   }
+
   ngOnInit(): void {
+    this.initForm();
     this.initValues();
   }
 
@@ -40,9 +52,16 @@ export class InventoryMainComponent implements OnInit {
   }
 
   initValues(){
+    this.findAllProductTypes();
     this.findAllInventory();
   }
 
+  initForm(){
+    this.filtersForm = this.formBuilder.group({
+      product: [],
+       type: []
+    })
+  }
 
 
   applyFilter(event: Event) {
@@ -55,13 +74,54 @@ export class InventoryMainComponent implements OnInit {
   }
 
   findAllInventory(){
-    this.inventoryService.findAllInventory()
+
+    if(this.paginator) this.pageIndex = this.paginator.pageIndex;
+
+    this.inventoryService.findAllInventory(this.pageIndex, this.pageSize)
     .subscribe(
       response=>{
         this.dataSource = new MatTableDataSource(response.content);
-        console.log(response);
+        console.log(response)
+        this.pageIndex = response.number;
+        this.pageSize = response.size;
+        this.totalLength = response.totalElements;
+
       }
     )
+  }
+
+  findAllProductTypes(){
+    this.productTypesService.findAllProductTypes()
+    .subscribe(
+      response=>{
+        console.log(response)
+        this.productTypes = response;
+      }
+    )
+  }
+
+
+  findProducts(newSearch: boolean){
+    this.inventoryService.findInventoryByFilters(this.getProductName(), this.getProductType(),
+      this.pageIndex, this.pageSize
+    )
+    .subscribe(
+      response=>{
+        console.log(response)
+        this.dataSource = new MatTableDataSource(response.content);
+        this.pageIndex = response.pageable.pageNumber;
+        this.pageSize = response.pageable.pageSize;
+        this.totalLength = response.totalElements;
+      }
+    )
+  }
+
+  getProductName(){
+    return this.filtersForm.get('product')!.value;
+  }
+
+  getProductType(){
+    return this.filtersForm.get('type')!.value;
   }
 
 }

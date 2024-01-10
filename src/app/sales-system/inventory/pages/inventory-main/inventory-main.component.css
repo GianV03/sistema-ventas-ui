@@ -1,0 +1,14 @@
+.filters-container{
+    display: flex;
+}
+
+mat-form-field{
+    margin-left: 1rem;
+    height: 70px;
+}
+
+form{
+   display: inline;
+}
+
+

@@ -1,8 +1,23 @@
-<mat-form-field>
-    <mat-label>Filtro</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="Producto" #input>
-  </mat-form-field>
-  
+<div class="filters-container">
+  <form [formGroup]="filtersForm">
+    <mat-form-field>
+      <mat-label>Producto</mat-label>
+      <input matInput placeholder="Producto" formControlName="product" #input>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Tipo</mat-label>
+      <mat-select formControlName="type">
+        <mat-option>
+          Tipo
+        </mat-option>
+        <mat-option [value]="productType.id" *ngFor="let productType of productTypes">
+          {{productType.productTypeName}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+  <button mat-raised-button color="warn" class="ml-3" (click)="findProducts(true)">Filtrar</button>
+</div>
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
   
@@ -51,6 +66,7 @@
       </tr>
     </table>
   
-    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+    <mat-paginator (page)="findAllInventory()" [length]="totalLength" [pageSizeOptions]="[5, 10, 25, 100]" [pageIndex]="pageIndex" [pageSize]="pageSize"  
+    [showFirstLastButtons]="true" aria-label="Select page of users" #paginator></mat-paginator>
   </div>
   

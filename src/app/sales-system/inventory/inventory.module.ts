@@ -4,6 +4,7 @@ import { InventoryMainComponent } from './pages/inventory-main/inventory-main.co
 import { InventoryRoutingModule } from './inventory-routing.module';
 import { MaterialModule } from 'src/app/material/material.module';
 import { SharedModule } from '../shared/shared.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -14,8 +15,10 @@ import { SharedModule } from '../shared/shared.module';
   ],
   imports: [
     CommonModule,
+    FormsModule,
     InventoryRoutingModule,
     MaterialModule,
+    ReactiveFormsModule,
     SharedModule
   ]
 })

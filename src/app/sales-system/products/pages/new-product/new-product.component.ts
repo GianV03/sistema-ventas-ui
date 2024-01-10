@@ -1,10 +1,12 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { productData} from '../../../shared/interfaces/product.interface';
 import { ProductService } from 'src/app/sales-system/shared/services/product.service';
 import { ProductTypesService } from 'src/app/sales-system/shared/services/product-types.service';
 import { SupplierService } from 'src/app/sales-system/shared/services/supplier.service';
+import Swal from 'sweetalert2';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'products-new-product',
@@ -29,6 +31,7 @@ export class NewProductComponent implements OnInit{
     private formBuilder: FormBuilder,
     private productService: ProductService,
     private productTypeService: ProductTypesService,
+    private router: Router,
     private supplierService: SupplierService
   ){
 
@@ -71,8 +74,8 @@ export class NewProductComponent implements OnInit{
         this.product = response;
         this.getId().setValue(this.id);
         this.getName().setValue(this.product.name);
-        this.getPurchasePrice().setValue(this.product.salePrice);
-        this.getSalePrice().setValue(this.product.purchasePrice);
+        this.getPurchasePrice().setValue(this.product.purchasePrice);
+        this.getSalePrice().setValue(this.product.salePrice);
         this.getDetails().setValue(this.product.details);
 
         this.selectedType = this.product.typeId;
@@ -102,25 +105,77 @@ export class NewProductComponent implements OnInit{
   onConfirm(){
     // update product
     if(this.id && this.id != ''){
-
-      this.productService.updateProduct(this.productForm.value as productData)
-      .subscribe(
-        response =>{
-          console.log(response);
-        }
-      )
-
-    }
-    else
-    // Create product
-    {
-      this.productService.saveProduct(this.productForm.value as productData)
+      
+      const confirmation = this.confirmationDialog("¿Está seguro de actualizar el producto?", "sí", "cancelar")
       .subscribe(
         response=>{
-          console.log(response);
+          
+          if(response == true){
+
+            // Se actualiza el producto
+            this.productService.updateProduct(this.productForm.value as productData)
+            .subscribe(
+              response =>{
+                Swal.fire("Se ha actualizado el producto", "", "success");
+                this.router.navigate(['/']);
+              },
+              error=>{
+                Swal.fire("No se ha podido actualizar el producto", "", "error");
+              }
+            );
+              }
+          
         }
-      )
+        );
     }
+         
+
+    // Create product
+    {
+      
+      this.confirmationDialog("¿Está seguro de registrar el producto?", "sí", "cancelar")
+      .subscribe(
+        response=>{
+          
+          if(response == true){
+
+            // Se actualiza el producto
+            this.productService.saveProduct(this.productForm.value as productData)
+            .subscribe(
+              response =>{
+                Swal.fire("Se ha creado el producto", "", "success");
+                this.router.navigate(['/']);
+              },
+              error=>{
+                Swal.fire("No se ha podido crear el producto", "", "error");
+              }
+            );
+              }
+          
+        }
+        );
+
+    }
+  }
+
+  confirmationDialog(title: string, confirm: string, deny: string): Observable<boolean> {
+    return new Observable<boolean>((observer) => {
+      Swal.fire({
+        title: title,
+        showDenyButton: true,
+        confirmButtonText: confirm,
+        denyButtonText: deny
+      }).then((result) => {
+        // Se confirma la acción
+        if (result.isConfirmed) {
+          observer.next(true);
+          observer.complete();
+        } else if (result.isDenied) {
+          observer.next(false);
+          observer.complete();
+        }
+      });
+    });
   }
 
   getId(){
