@@ -128,9 +128,8 @@ export class NewProductComponent implements OnInit{
         }
         );
     }
-         
-
-    // Create product
+    else{
+      // Create product
     {
       
       this.confirmationDialog("¿Está seguro de registrar el producto?", "sí", "cancelar")
@@ -139,7 +138,7 @@ export class NewProductComponent implements OnInit{
           
           if(response == true){
 
-            // Se actualiza el producto
+            // Se crea el producto
             this.productService.saveProduct(this.productForm.value as productData)
             .subscribe(
               response =>{
@@ -156,6 +155,10 @@ export class NewProductComponent implements OnInit{
         );
 
     }
+    }
+         
+
+    
   }
 
   confirmationDialog(title: string, confirm: string, deny: string): Observable<boolean> {

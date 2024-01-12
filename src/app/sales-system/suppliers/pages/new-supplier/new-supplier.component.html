@@ -40,7 +40,7 @@
                 </mat-form-field>
 
                 <button mat-raised-button color="primary" routerLink="/proveedores">Atrás</button>
-                <button mat-raised-button color="primary" class="ml-2" (click)="onConfirm()">Guardar</button>
+                <button mat-raised-button color="primary" class="ml-2" (click)="onConfirm()" [disabled]="modeView">Guardar</button>
             </form>
         </mat-card-content>
     </mat-card>

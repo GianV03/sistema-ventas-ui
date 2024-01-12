@@ -22,7 +22,7 @@ export class ProductsMainComponent implements AfterViewInit, OnInit {
   public dataSource!: MatTableDataSource<ProductPageContent>;
   public filtersForm!: FormGroup;
   public pageIndex: number=0;
-  public pageSize: number=5;
+  public pageSize: number=10;
   public productsTypes!: any;
   public totalLength!: number;
 
@@ -71,7 +71,7 @@ export class ProductsMainComponent implements AfterViewInit, OnInit {
   /** Búsqueda inicial de productos */
   productsInitialSearch(){
 
-    this.productService.findProductsByFilter('', '', 0, 5)
+    this.productService.findProductsByFilter('', '', this.pageIndex, this.pageSize)
     .subscribe(
       (response: ProductPage)=>{
         console.log(response)

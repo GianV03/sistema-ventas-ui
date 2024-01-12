@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { Supplier } from 'src/app/sales-system/shared/interfaces/supplier.interface';
 import { SupplierService } from 'src/app/sales-system/shared/services/supplier.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-new-supplier',
@@ -18,6 +20,7 @@ export class NewSupplierComponent implements OnInit{
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private router: Router,
     private supplierService: SupplierService
   ){
     
@@ -55,24 +58,69 @@ export class NewSupplierComponent implements OnInit{
   onConfirm(){
     if(this.id){
 
-      this.supplierService.updateSupplier(this.supplierForm.value as Supplier)
+      const confirmation = this.confirmationDialog("¿Está seguro de actualizar el proveedor?", "sí", "cancelar")
       .subscribe(
         response=>{
-          console.log(response);
+          
+          if(response == true){
+
+            this.supplierService.updateSupplier(this.supplierForm.value as Supplier)
+            .subscribe(
+              response =>{
+                Swal.fire("Se ha actualizado el proveedor", "", "success");
+                this.router.navigate(['/proveedores']);
+              },
+              error=>{
+                Swal.fire("No se ha podido actualizar el proveedor", "", "error");
+              }
+            );
+
+          }
         }
-      )
+        );
 
     }else{
 
-      this.supplierService.saveSupplier(this.supplierForm.value as Supplier)
+      this.confirmationDialog("¿Está seguro de registrar el producto?", "sí", "cancelar")
       .subscribe(
         response=>{
-          console.log(response);
+          
+          if(response == true){
+            this.supplierService.saveSupplier(this.supplierForm.value as Supplier)
+            .subscribe(
+              response =>{
+                Swal.fire("Se ha registrado el proveedor", "", "success");
+                this.router.navigate(['/proveedores']);
+              },
+              error=>{
+                Swal.fire("No se ha podido registrar el proveedor", "", "error");
+              }
+            );
+          }
         }
       );
+  }
+  }
 
-    }
 
+  confirmationDialog(title: string, confirm: string, deny: string): Observable<boolean> {
+    return new Observable<boolean>((observer) => {
+      Swal.fire({
+        title: title,
+        showDenyButton: true,
+        confirmButtonText: confirm,
+        denyButtonText: deny
+      }).then((result) => {
+        // Se confirma la acción
+        if (result.isConfirmed) {
+          observer.next(true);
+          observer.complete();
+        } else if (result.isDenied) {
+          observer.next(false);
+          observer.complete();
+        }
+      });
+    });
   }
 
 }

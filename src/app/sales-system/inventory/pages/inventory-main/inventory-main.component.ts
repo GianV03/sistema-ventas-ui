@@ -27,7 +27,7 @@ export class InventoryMainComponent implements OnInit {
   public dataSource!: MatTableDataSource<Inventory>;
   public filtersForm!: FormGroup;
   public pageIndex: number=0;
-  public pageSize: number=5;
+  public pageSize: number=10;
   public productTypes!: any;
   public totalLength!: number;
 
@@ -101,16 +101,16 @@ export class InventoryMainComponent implements OnInit {
   }
 
 
-  findProducts(newSearch: boolean){
+  findInventoryByFilters(newSearch: boolean){
     this.inventoryService.findInventoryByFilters(this.getProductName(), this.getProductType(),
-      this.pageIndex, this.pageSize
+      this.paginator
     )
     .subscribe(
       response=>{
         console.log(response)
         this.dataSource = new MatTableDataSource(response.content);
-        this.pageIndex = response.pageable.pageNumber;
-        this.pageSize = response.pageable.pageSize;
+        this.pageIndex = response.number;
+        this.pageSize = response.size;
         this.totalLength = response.totalElements;
       }
     )

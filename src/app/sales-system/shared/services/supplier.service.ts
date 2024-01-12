@@ -28,6 +28,15 @@ export class SupplierService{
         return this.httpClient.get<any>(`${this.SERVER}/page`);
     }
 
+    findSuppliersByFilters(supplierName: string, page: PageEvent): Observable<any>{
+        let params = new HttpParams;
+        if(supplierName) params = params.append('supplierName', supplierName);
+        if(page) params = params.append('page', page.pageIndex); 
+        if(page) params = params.append('size', page.pageSize);
+
+        return this.httpClient.get<any>(`${this.SERVER}/filters`, {params});
+    }
+
     findSupplierById(id: string){
         return this.httpClient.get<any>(`${this.SERVER}/${id}`);
     }
@@ -39,12 +48,16 @@ export class SupplierService{
         return this.httpClient.post(`${this.SERVER}`, supplaier, {headers, responseType:'text'});
     }
 
-    updateSupplier(supplier: Supplier){
+    updateSupplier(supplier: Supplier): Observable<any>{
         const headers = new HttpHeaders({
             'content-type': 'application/json'
         });
 
         return this.httpClient.put(`${this.SERVER}`, supplier, {headers, responseType: 'text'});
+    }
+
+    deleteSupplier(id: string): Observable<any>{
+        return this.httpClient.delete<string>(`${this.SERVER}/${id}`);
     }
 
 }
