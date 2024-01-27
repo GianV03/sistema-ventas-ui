@@ -48,6 +48,11 @@ export class ProductService {
 
   }
 
+  findProductsBySupplier(supplierId: string): Observable<any>{
+    return this.httpClient.get(`${this.SERVER}/bySupplier/${supplierId}`)
+  }
+
+
   saveProduct(product: productData){
 
     const headers = new HttpHeaders({

@@ -1,6 +1,8 @@
 
-import { Component, OnInit } from '@angular/core';
+import { provideCloudflareLoader } from '@angular/common';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
 import { format } from 'date-fns';
 import { timeout } from 'rxjs';
@@ -19,6 +21,7 @@ import { SupplierService } from 'src/app/sales-system/shared/services/supplier.s
 })
 export class NewOrderComponent implements OnInit{
 
+  addDetailButtonDisabled:boolean = true;
   details?: any[];
   id?: string;
   mode?: string | null;
@@ -26,8 +29,9 @@ export class NewOrderComponent implements OnInit{
   order: any;
   orderForm!: FormGroup;
   products!: ProductPageContent[];
-  selectedProduct!: string;
+  selectedProducts: string[] = [''];
   suppliers!: Supplier[]
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -52,7 +56,6 @@ export class NewOrderComponent implements OnInit{
 
   initValues(){
     this.findAllSuppliers();
-    this.findAllProducts();
     this.findAllOrderDetails();
     if(this.id && this.id!=''){
       this.orderService.findOrderById(this.id)
@@ -88,6 +91,13 @@ export class NewOrderComponent implements OnInit{
 
   }
 
+  onSupplierSelectionChange(){
+
+    this.addDetailButtonDisabled = false;
+    this.findProductsBySupplier();
+
+  }
+
   get orderDetailsFormArray(){
     return this.orderForm.get('orderDetails') as FormArray;
   }
@@ -108,11 +118,7 @@ export class NewOrderComponent implements OnInit{
       quantity: [quantity],
       total:[{value:total, disabled: true}]
     });
-
     this.orderDetailsFormArray.push(newDetail);
-
-    console.log(newDetail)
-    this.calculateDetailTotal(newDetail);
 
   }
 
@@ -148,20 +154,25 @@ export class NewOrderComponent implements OnInit{
   }
 
   // Brings all the products for the mat-select
-  findAllProducts(){
-    this.productService.findAllProducts()
+  findProductsBySupplier(){
+    this.productService.findProductsBySupplier(this.getSupplier().value)
     .subscribe(
       response=>{
-        console.log(response.content)
-        this.products = response.content;
+        this.products = response;
       }
     )
   }
 
-  onSelectProduct(element: FormGroup){
-    const productId = this.selectedProduct;
+  onSelectProduct(i: number){
+    const productId = this.selectedProducts[i];
     const product = this.products.find(product => product.id == productId);
-    element.get('price')?.setValue(product?.purchasePrice);
+    this.getFormGroup(i).get('price')?.setValue(product?.purchasePrice);
+  }
+
+  onQuantityChanges(i: number){
+    const price = this.getFormGroup(i).get('price')?.value;
+    const quantity = this.getFormGroup(i).get('quantity')?.value;
+    this.getFormGroup(i).get('total')?.setValue(quantity*price);
   }
 
   saveOrder(){

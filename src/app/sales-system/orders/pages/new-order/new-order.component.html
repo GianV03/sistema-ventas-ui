@@ -31,7 +31,7 @@
 
                 <mat-form-field class="form-field">
                     <mat-label>Proveedor</mat-label>
-                    <mat-select formControlName="supplier">
+                    <mat-select formControlName="supplier" (valueChange)="onSupplierSelectionChange()">
                         <mat-option *ngFor="let supplier of suppliers" [value]="supplier.id">{{ supplier.name }}</mat-option>
                         <mat-option></mat-option>
                     </mat-select>
@@ -71,7 +71,7 @@
                     <div [formGroup]="getFormGroup(i)">
                         <mat-form-field>
                             <mat-label>Producto</mat-label>
-                            <mat-select formControlName="product" [(ngModel)]="selectedProduct" (selectionChange)="onSelectProduct(getFormGroup(i))">
+                            <mat-select formControlName="product" [(ngModel)]="selectedProducts[i]" (selectionChange)="onSelectProduct(i)">
                                 <mat-option *ngFor="let product of products" [value]="product.id">{{product.name}}</mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -83,7 +83,7 @@
     
                         <mat-form-field>
                             <mat-label>Cantidad</mat-label>
-                            <input type="number" matInput formControlName="quantity">
+                            <input type="number" matInput (keyup)="onQuantityChanges(i)" formControlName="quantity">
                         </mat-form-field>
     
                         <mat-form-field>
@@ -97,7 +97,7 @@
                 </div>
 
             </div>
-            <button mat-raised-button (click)="addDetail('',0,0,0)" color="primary">Añadir Detalle</button>
+            <button mat-raised-button (click)="addDetail('',0,0,0)" color="primary" [disabled]="addDetailButtonDisabled">Añadir Detalle</button>
         </mat-card-content>
 
     </mat-card>
